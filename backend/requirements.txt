@@ -5,3 +5,4 @@ PyJWT
 fpdf2
 python-multipart
 gunicorn
+python-dotenv
