@@ -1,0 +1,37 @@
+# Node.js
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Environment & Secrets (CRITICAL)
+.env
+.env.production
+backend/.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.conda/
+venv/
+ENV/
+
+# Database (Keep your local DB private)
+backend/finpay.db
+backend/fintech.db
+
+# IDEs & System
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Mobile Specific (from subproject)
+finpay-mobile/node_modules/
+finpay-mobile/.expo/
+finpay-mobile/dist/
+finpay-mobile/web-build/
+finpay-mobile/ios/
+finpay-mobile/android/

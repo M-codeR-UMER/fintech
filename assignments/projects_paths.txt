@@ -1,0 +1,12 @@
+"D:\fintech\backend",
+"D:\fintech\dist",
+"D:\fintech\src",
+"D:\fintech\.env",
+"D:\fintech\.env.example",
+"D:\fintech\GEMINI.md",
+"D:\fintech\index.html",
+"D:\fintech\package.json",
+"D:\fintech\package-lock.json",
+"D:\fintech\postcss.config.js",
+"D:\fintech\tailwind.config.js",
+"D:\fintech\vite.config.js"

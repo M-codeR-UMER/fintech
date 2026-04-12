@@ -1,0 +1,10 @@
+Assignment 3
+Topic: Mobile Banking Challenges and Chatbots
+
+Q1: What are the fundamental differences between Native Apps, Web Apps, and Hybrid Apps?
+
+Q2: Building native apps is known to be costly.What are the other major challenges of mobile banking, such as screen size limitations, navigation issues, and multitasking constraints?
+
+Q3: What are the primary advantages of integrating chatbots into mobile banking, such as 24/7 availability, cost-efficiency, and reduced human error?
+
+Q4: Differentiate between Task-Oriented chatbots and Data-Driven chatbots (which handle features like spending analysis, predictive capabilities, and risk management).

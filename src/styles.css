@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Sora', sans-serif;
+  color: #0f172a;
+  background: #ecfeff;
+}
+
+:root.dark {
+  color: #f1f5f9;
+  background: #0f172a;
+}
+
+html,
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+html.dark,
+body.dark {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+/* Scrollbar styling - Light mode */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Scrollbar styling - Dark mode (WebKit) */
+:root.dark ::-webkit-scrollbar-track,
+html.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+:root.dark ::-webkit-scrollbar-thumb,
+html.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 5px;
+}
+
+:root.dark ::-webkit-scrollbar-thumb:hover,
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Firefox scrollbar - Light mode */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+/* Firefox scrollbar - Dark mode */
+:root.dark *,
+html.dark * {
+  scrollbar-color: #475569 #1e293b;
+}
+
+.app-bg {
+  background:
+    radial-gradient(circle at 10% 5%, rgba(34, 197, 164, 0.2), transparent 35%),
+    radial-gradient(circle at 90% 80%, rgba(125, 211, 252, 0.2), transparent 40%),
+    linear-gradient(150deg, #ecfeff 0%, #f8fafc 55%, #f0fdfa 100%);
+}
+
+.dark .app-bg,
+:root.dark .app-bg {
+  background:
+    radial-gradient(circle at 10% 5%, rgba(15, 167, 145, 0.15), transparent 35%),
+    radial-gradient(circle at 90% 80%, rgba(34, 211, 238, 0.1), transparent 40%),
+    linear-gradient(150deg, #0f172a 0%, #1e293b 55%, #0f766e 100%);
+}
