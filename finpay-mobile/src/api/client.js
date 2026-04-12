@@ -3,8 +3,8 @@ import axios from 'axios';
 // IMPORTANT: Replace this with your computer's local IP address (e.g., 192.168.1.5)
 // so your physical phone can connect to the backend while testing.
 // Run 'ipconfig' in your terminal to find your IPv4 Address.
-const LOCAL_IP = '127.0.0.1'; // Change this for physical phone testing
-export const API_BASE_URL = `http://${LOCAL_IP}:8001/api`;
+// PRODUCTION API URL
+export const API_BASE_URL = 'https://fintech-api-y5hn.onrender.com/api';
 
 export const client = axios.create({
   baseURL: API_BASE_URL,
