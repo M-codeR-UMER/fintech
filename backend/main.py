@@ -38,6 +38,12 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(title="FinPay Backend API", lifespan=lifespan)
 
+# Health Check for Render
+@app.get("/")
+@app.head("/")
+def health_check():
+    return {"status": "ok", "message": "FinPay API is running securely."}
+
 # Global Exception Handler to expose real errors to the frontend
 @app.exception_handler(Exception)
 def global_exception_handler(request, exc):
