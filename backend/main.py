@@ -117,8 +117,10 @@ def get_db_connection():
         conn.close()
 
 def init_db() -> None:
+    print(f"📂 DB_PATH is set to: {DB_PATH.absolute()}")
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     with get_db_connection() as conn:
+        print("🛠️ Creating tables if not exist...")
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS users (
@@ -228,6 +230,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
 
 @app.post("/api/admin/login")
 def admin_login(request: AdminLoginRequest):
+    print(f"🔐 Admin login attempt: {request.email}")
     with get_db_connection() as conn:
         email = request.email.strip()
         pwd = request.password.strip()
@@ -236,17 +239,21 @@ def admin_login(request: AdminLoginRequest):
             (email, pwd)
         ).fetchone()
         if not user:
+            print(f"❌ Admin login failed: Invalid credentials for {email}")
             raise HTTPException(status_code=401, detail="Admin credentials not found")
         
         user_dict = dict(user)
         if user_dict.get("status") == "frozen":
+            print(f"🚫 Admin login blocked: Account frozen for {email}")
             raise HTTPException(status_code=403, detail="Your account is restricted by admin.")
             
+        print(f"✅ Admin login successful: {email}")
         token = create_access_token(data={"sub": user_dict["id"], "role": user_dict["role"]})
         return {**user_dict, "token": token}
 
 @app.post("/api/user/login")
 def user_login(request: UserLoginRequest):
+    print(f"🔐 User login attempt: {request.phoneNumber} as {request.role}")
     with get_db_connection() as conn:
         phone = request.phoneNumber.strip()
         pwd = request.password.strip()
@@ -255,23 +262,28 @@ def user_login(request: UserLoginRequest):
             (phone, request.role)
         ).fetchone()
         if not user_exists:
+            print(f"❓ User login failed: Account not found for {phone}")
             raise HTTPException(status_code=404, detail="Account not found. Please register first.")
         user = conn.execute(
             "SELECT * FROM users WHERE phone_number = ? AND password = ? AND role = ?", 
             (phone, pwd, request.role)
         ).fetchone()
         if not user:
+            print(f"❌ User login failed: Invalid PIN for {phone}")
             raise HTTPException(status_code=401, detail="Invalid Security PIN. Please try again.")
         
         user_dict = dict(user)
         if user_dict.get("status") == "frozen":
+            print(f"🚫 User login blocked: Account frozen for {phone}")
             raise HTTPException(status_code=403, detail="Your account is restricted by admin.")
 
+        print(f"✅ User login successful: {phone}")
         token = create_access_token(data={"sub": user_dict["id"], "role": user_dict["role"]})
         return {**user_dict, "token": token}
 
 @app.post("/api/user/register")
 def user_register(request: UserRegisterRequest):
+    print(f"📝 User registration attempt: {request.phoneNumber}")
     with get_db_connection() as conn:
         try:
             user_id = str(uuid.uuid4())
@@ -283,9 +295,11 @@ def user_register(request: UserRegisterRequest):
             conn.commit()
             user = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
             user_dict = dict(user)
+            print(f"✅ User registration successful: {request.phoneNumber}")
             token = create_access_token(data={"sub": user_dict["id"], "role": user_dict["role"]})
             return {**user_dict, "token": token}
         except sqlite3.IntegrityError:
+            print(f"❌ User registration failed: Number {request.phoneNumber} already exists")
             raise HTTPException(status_code=400, detail="Mobile number already registered")
 
 # --- Data Endpoints ---

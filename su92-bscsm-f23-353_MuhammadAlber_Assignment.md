@@ -1,4 +1,4 @@
-# **Full-Stack Project Documentation: FinPay Mobile Wallet**
+# **Full-Stack Project Documentation: FinPay Terminal Ecosystem**
 
 **Full Name:** Muhammad Alber  
 **Student ID:** su92-bscsm-f23-353  
@@ -9,79 +9,79 @@
 ---
 
 ## **1. Executive Summary**
-**FinPay** is a comprehensive, mobile-first fintech application built to provide a modern banking experience for Pakistani users. This project demonstrates a complete full-stack integration, featuring a **React (Vite)** frontend and a **FastAPI (Python)** backend. The application is designed to handle real-time financial data, transaction tracking, and account management with a focus on trust and accessibility.
+**FinPay** is a production-ready, full-stack fintech ecosystem comprising a **React (Vite)** web terminal, a **React Native (Expo)** mobile application, and a **FastAPI (Python)** backend. The system is engineered for high-security financial operations, featuring JWT-based authentication, administrative node control (account freezing), and automated PDF financial statements. This project adheres to Pakistani financial standards (PKR) and provides a seamless experience across web and mobile platforms.
 
 ---
 
-## **2. Deployment & Access Links**
-*Note: These links represent the live, production-ready versions of the application.*
+## **2. Live Deployment & Access**
+*Note: The entire ecosystem is deployed in a live cloud environment with a production-grade database handshake.*
 
-| Component | Status | Deployment Link (URL) |
+| Component | Platform | Deployment Link (URL) |
 | :--- | :--- | :--- |
-| **Frontend App** | Deployed | `[Insert Your Vercel/Netlify URL Here]` |
-| **Backend API** | Deployed | `[Insert Your Render/Railway URL Here]/docs` |
+| **Frontend Web** | Vercel | `https://fintech-app-ten-gray.vercel.app/` |
+| **Backend API** | Render | `https://fintech-api-y5hn.onrender.com/docs` |
+| **Mobile App** | Expo/EAS | `[Download Link for .apk]` |
 
 ---
 
 ## **3. Key Functional Features**
-The application delivers a professional-grade set of fintech tools:
 
-*   **Smart Dashboard:** Provides an immediate view of the user's balance with interactive quick-action buttons for sending and receiving money.
-*   **Backend-Validated Transfers:** A functional transfer system that verifies account balances and updates the database in real-time.
-*   **Advanced Transaction Ledger:** A detailed history of all credits and debits, utilizing Pakistani financial conventions and professional color-coding (**Green** for credits, **Red** for debits).
-*   **Secure QR Payments:** P2P transfer capabilities via QR code generation and scanning simulations.
-*   **Virtual Card Suite:** A 3D-styled virtual debit card interface for digital shopping management.
-*   **Dedicated Account Center:** A high-end profile screen displaying account tiers (L2), monthly transaction limits (Rs. 500,000), and security settings.
-*   **Theming & UX:** Full support for Dark/Light modes with persistent state management and smooth "animate-rise" transitions.
+### **🛡️ Security & Authentication Suite**
+*   **JWT Handshake:** All protected endpoints require a valid Bearer token for data access.
+*   **OTP Verification:** A 4-digit mobile OTP layer for transaction authorization.
+*   **Administrative Freezing:** Admins can instantly restrict any user account, blocking all API access in real-time.
+*   **Session Guard:** 60-second inactivity logout protocol for the web terminal.
+
+### **💼 Core Banking Operations**
+*   **Tiered Limits:** Automatic enforcement of L1 (Rs. 50,000) and L2 (Rs. 500,000) monthly transaction caps.
+*   **Smart Ledger:** A detailed transaction history with professional color-coding (**Green** for credits, **Red** for debits).
+*   **PDF Engine:** One-click generation of official, computer-generated account statements using `fpdf2`.
+*   **P2P Transfer:** Real-time balance updates with recipient validation and limit checks.
+
+### **🕹️ Admin Command Console**
+*   **System Metrics:** Live tracking of Total Users, System Transactions, and Total Volume (PKR).
+*   **User Registry:** A master ledger for admins to manage balances, tiers, and account statuses.
+*   **Node Restriction:** Instant "Freeze/Unfreeze" toggle for risk management.
 
 ---
 
 ## **4. Technical Stack & Architecture**
 
-### **Frontend (UI/UX)**
-*   **Library:** React.js (Vite) for high-performance rendering.
-*   **Styling:** Tailwind CSS for a modern, responsive, and trustworthy design.
-*   **Interactivity:** Lucide-React icons and React Hooks for seamless state management.
+### **Frontend (Web & Mobile)**
+*   **Web:** React.js (Vite) + Tailwind CSS + Lucide Icons.
+*   **Mobile:** React Native (Expo) + NativeWind + React Navigation.
+*   **API Client:** Centralized Axios/Fetch handler with Bearer token injection.
 
-### **Backend (API Layer)**
-*   **Framework:** FastAPI (Python) for robust and fast API handling.
-*   **Middlewares:** Configured with CORS for secure communication between frontend and backend.
-*   **Endpoints:** RESTful API design for balance retrieval, transaction history, and money transfers.
+### **Backend (Microservice Layer)**
+*   **Framework:** FastAPI (Python) with `uvicorn` and `gunicorn` for production.
+*   **Security:** `PyJWT` for token generation and `python-dotenv` for secret management.
+*   **Reporting:** `fpdf2` for dynamic PDF statement generation.
 
 ### **Database (Persistence)**
-*   **Engine:** SQLite (`finpay.db`).
-*   **Schema:** Structured tables for `app_state` (balance tracking) and `transactions` (historical data).
-*   **Data Integrity:** Automated database seeding with localized Pakistani mock data.
+*   **Engine:** SQLite (`finpay.db`) with automated schema migrations.
+*   **Schema:** Relational tables for `users` (auth, tiers, status) and `transactions` (linked by `user_id`).
 
 ---
 
-## **5. Fintech Standards & PKR Compliance**
-The application strictly follows the domain rules for Pakistani Fintech:
-*   **Currency Labeling:** All monetary values are prefixed with `Rs.`.
-*   **Number Formatting:** Implementation of Pakistani comma separation (e.g., `Rs. 1,25,430.50`).
-*   **Precision Handling:** Backend logic ensures 2-decimal point precision for all financial calculations.
-
----
-
-## **6. Visual Project Evidence (Screenshots)**
+## **5. Visual Project Evidence (Screenshots)**
 *After converting this file to Word, please replace the text below with your actual project screenshots.*
 
-### **A. Application Dashboard**
-*(Insert screenshot of the main dashboard showing the Rs. 125,430.50 balance)*
+### **A. Live Web Dashboard (Vercel)**
+*(Insert screenshot of the dashboard at https://fintech-app-ten-gray.vercel.app/ showing the PKR balance)*
 
-### **B. Transaction History & Color Coding**
-*(Insert screenshot showing the list of red and green transactions)*
+### **B. Admin Command Console (Production)**
+*(Insert screenshot of the Admin Dashboard showing total system volume)*
 
-### **C. New Professional Account Screen**
-*(Insert screenshot of the new Account/Profile screen showing account limits and details)*
+### **C. Account Restriction (Frozen State)**
+*(Insert screenshot showing the "ACCESS DENIED: Your account is restricted" alert)*
 
-### **D. Virtual Card Interface**
-*(Insert screenshot of the virtual card in both Light and Dark modes)*
+### **D. Automated PDF Statement**
+*(Insert screenshot of the generated FinPay PDF account statement)*
 
-### **E. Transfer Flow (Success State)**
-*(Insert screenshot of the "Transfer Successful" message after sending money)*
+### **E. Mobile App (Native Interface)**
+*(Insert screenshot of the FinPay mobile app running on a device)*
 
 ---
 
-## **7. Conclusion**
-The **FinPay** project successfully integrates a high-fidelity frontend with a reliable backend. It meets all the professional standards for a fintech application, including secure data handling, localized formatting, and a user-centric design approach. This submission represents a complete, functional prototype ready for production deployment.
+## **6. Conclusion**
+The **FinPay** ecosystem successfully bridges the gap between a modern UI and a secure, production-grade backend. It meets all the professional standards for a fintech application in Pakistan, including tiered security, administrative oversight, and official financial reporting. This submission represents a complete, functional prototype ready for production deployment.

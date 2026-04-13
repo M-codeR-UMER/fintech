@@ -1,4 +1,4 @@
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8001/api';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://fintech-api-y5hn.onrender.com/api';
 const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
 const buildUrl = (path, query = {}) => {
