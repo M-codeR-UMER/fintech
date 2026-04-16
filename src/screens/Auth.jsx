@@ -216,6 +216,7 @@ export default function Auth({ onAuthSuccess }) {
                   <Mail size={18} className="text-slate-400" />
                   <input
                     type="email"
+                    required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-transparent font-bold text-slate-900 dark:text-white text-sm outline-none"

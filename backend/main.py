@@ -94,13 +94,20 @@ class UserLoginRequest(BaseModel):
 
 class UserRegisterRequest(BaseModel):
     firstName: str
+    lastName: Optional[str] = None
     phoneNumber: str
+    email: Optional[str] = None
     password: str
     role: str = "user"
 
 class StatusToggleRequest(BaseModel):
     userId: str
     status: Literal["active", "frozen"]
+
+class ProfileUpdateRequest(BaseModel):
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    email: Optional[str] = None
 
 # --- Database Schema & Logic ---
 
@@ -134,6 +141,7 @@ def init_db() -> None:
                 email TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL,
                 first_name TEXT NOT NULL,
+                last_name TEXT DEFAULT '',
                 phone_number TEXT NOT NULL,
                 role TEXT DEFAULT 'user',
                 tier TEXT DEFAULT 'L1',
@@ -173,6 +181,12 @@ def init_db() -> None:
         # DB Migration: Ensure all users have a status
         cursor = conn.execute("PRAGMA table_info(users)")
         columns = [row[1] for row in cursor.fetchall()]
+        if "last_name" not in columns:
+            try:
+                conn.execute("ALTER TABLE users ADD COLUMN last_name TEXT DEFAULT ''")
+            except sqlite3.OperationalError:
+                pass
+        conn.execute("UPDATE users SET last_name = '' WHERE last_name IS NULL")
         if "status" not in columns:
             try:
                 conn.execute("ALTER TABLE users ADD COLUMN status TEXT DEFAULT 'active'")
@@ -293,10 +307,12 @@ def user_register(request: UserRegisterRequest):
     with get_db_connection() as conn:
         try:
             user_id = str(uuid.uuid4())
-            placeholder_email = f"{user_id}@finpay.local"
+            normalized_email = (request.email or "").strip().lower()
+            user_email = normalized_email if normalized_email else f"{user_id}@finpay.local"
+            last_name = (request.lastName or "").strip()
             conn.execute(
-                "INSERT INTO users (id, email, password, first_name, phone_number, role, balance) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                (user_id, placeholder_email, request.password.strip(), request.firstName.strip(), request.phoneNumber.strip(), request.role, 0.0)
+                "INSERT INTO users (id, email, password, first_name, last_name, phone_number, role, balance) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (user_id, user_email, request.password.strip(), request.firstName.strip(), last_name, request.phoneNumber.strip(), request.role, 0.0)
             )
             conn.commit()
             user = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
@@ -306,7 +322,64 @@ def user_register(request: UserRegisterRequest):
             return {**user_dict, "token": token}
         except sqlite3.IntegrityError:
             print(f"❌ User registration failed: Number {request.phoneNumber} already exists")
-            raise HTTPException(status_code=400, detail="Mobile number already registered")
+            raise HTTPException(status_code=400, detail="Mobile number or email already registered")
+
+@app.put("/api/profile")
+def update_profile(request: ProfileUpdateRequest, current_user: dict = Depends(get_current_user)):
+    user_id = current_user["sub"]
+    with get_db_connection() as conn:
+        user = _get_user(conn, user_id)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        updates = []
+        values = []
+
+        if request.firstName is not None:
+            first_name = request.firstName.strip()
+            if len(first_name) < 2:
+                raise HTTPException(status_code=400, detail="First name must be at least 2 characters")
+            updates.append("first_name = ?")
+            values.append(first_name)
+
+        if request.lastName is not None:
+            last_name = request.lastName.strip()
+            updates.append("last_name = ?")
+            values.append(last_name)
+
+        if request.email is not None:
+            email = request.email.strip().lower()
+            if not email or "@" not in email or "." not in email.split("@")[-1]:
+                raise HTTPException(status_code=400, detail="Please provide a valid email address")
+            updates.append("email = ?")
+            values.append(email)
+
+        if not updates:
+            raise HTTPException(status_code=400, detail="No profile fields provided")
+
+        values.append(user_id)
+
+        try:
+            conn.execute(
+                f"UPDATE users SET {', '.join(updates)} WHERE id = ?",
+                tuple(values)
+            )
+            conn.commit()
+        except sqlite3.IntegrityError:
+            raise HTTPException(status_code=400, detail="Email already in use")
+
+        updated_user = _get_user(conn, user_id)
+        return {
+            "id": updated_user["id"],
+            "first_name": updated_user["first_name"],
+            "last_name": updated_user["last_name"] or "",
+            "email": updated_user["email"],
+            "phone_number": updated_user["phone_number"],
+            "role": updated_user["role"],
+            "tier": updated_user["tier"],
+            "status": updated_user["status"],
+            "balance": updated_user["balance"]
+        }
 
 # --- Data Endpoints ---
 
@@ -456,7 +529,7 @@ def process_topup(request: TopUpRequest, current_user: dict = Depends(get_curren
 def admin_get_users(current_user: dict = Depends(get_current_user)):
     if current_user["role"] != "admin": raise HTTPException(status_code=403, detail="Admin only")
     with get_db_connection() as conn:
-        rows = conn.execute("SELECT id, email, first_name, phone_number, role, tier, status, balance FROM users").fetchall()
+        rows = conn.execute("SELECT id, email, first_name, last_name, phone_number, role, tier, status, balance FROM users").fetchall()
         return [dict(row) for row in rows]
 
 @app.post("/api/admin/users/toggle-status")

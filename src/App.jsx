@@ -168,6 +168,7 @@ export default function App() {
               <div className="px-6 pb-6 h-full overflow-y-auto overflow-x-hidden flex-1">
                 <AccountScreen 
                   user={currentUser} 
+                  onUserUpdate={setCurrentUser}
                   onLogout={handleLogout} 
                   isDarkMode={isDarkMode}
                   onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}

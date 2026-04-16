@@ -17,9 +17,15 @@ import {
   AlertCircle
 } from 'lucide-react';
 
-const AccountScreen = ({ user, onLogout, onBack, isDarkMode, onToggleDarkMode }) => {
+const isPlaceholderEmail = (value) => {
+  const email = String(value || '').trim().toLowerCase();
+  return /^[0-9a-f-]{36}@finpay\.local$/.test(email);
+};
+
+const AccountScreen = ({ user, onUserUpdate, onLogout, onBack, isDarkMode, onToggleDarkMode }) => {
   const [activeTab, setActiveTab] = useState('main'); // main, profile, security, notifications
   const [accountData, setAccountData] = useState({ tier: user?.tier || 'L1', limit: user?.tier === 'L2' ? 500000 : 50000 });
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
   
   useEffect(() => {
     const fetchFreshData = async () => {
@@ -85,6 +91,8 @@ const AccountScreen = ({ user, onLogout, onBack, isDarkMode, onToggleDarkMode })
   const userTier = accountData.tier;
   const tierName = userTier === 'L1' ? 'Level 1 (L1)' : 'Level 2 (L2)';
   const monthlyLimitDisplay = Number(accountData.limit).toLocaleString();
+  const displayFirstName = profileData.firstName?.trim() || user?.first_name || user?.firstName || 'User';
+  const displayLastName = profileData.lastName?.trim() || user?.last_name || user?.lastName || '';
 
   const menuItems = [
     { id: 'profile', icon: Settings, label: 'Profile Settings', sub: 'Name, Email, Phone' },
@@ -96,18 +104,83 @@ const AccountScreen = ({ user, onLogout, onBack, isDarkMode, onToggleDarkMode })
 
   const [profileData, setProfileData] = useState(() => {
     const saved = localStorage.getItem(`finpay.profile_${user?.id || user?.phoneNumber || 'default'}`);
-    return saved ? JSON.parse(saved) : {
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return {
+        ...parsed,
+        email: isPlaceholderEmail(parsed?.email) ? '' : (parsed?.email || ''),
+      };
+    }
+    return {
       firstName: user?.first_name || user?.firstName || '',
       lastName: user?.last_name || user?.lastName || '',
-      email: user?.email || '',
+      email: isPlaceholderEmail(user?.email) ? '' : (user?.email || ''),
       phone: user?.phone_number || user?.phoneNumber || ''
     };
   });
 
-  const handleProfileUpdate = () => {
-    localStorage.setItem(`finpay.profile_${user?.id || user?.phoneNumber || 'default'}`, JSON.stringify(profileData));
-    showToast('Profile updated successfully!');
-    setActiveTab('main');
+  const handleProfileUpdate = async () => {
+    const firstName = profileData.firstName.trim();
+    const lastName = profileData.lastName.trim();
+    const email = profileData.email.trim().toLowerCase();
+
+    if (!firstName || firstName.length < 2) {
+      showToast('Please enter a valid first name');
+      return;
+    }
+
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      showToast('Please enter a valid email address');
+      return;
+    }
+
+    setIsSavingProfile(true);
+    try {
+      const { updateUserProfile } = await import('../api/client');
+      const updated = await updateUserProfile({ firstName, lastName, email });
+
+      const nextProfileData = {
+        ...profileData,
+        firstName: updated.first_name || firstName,
+        lastName: updated.last_name ?? lastName,
+        email: updated.email || email,
+        phone: updated.phone_number || profileData.phone,
+      };
+
+      setProfileData(nextProfileData);
+      localStorage.setItem(`finpay.profile_${user?.id || user?.phoneNumber || 'default'}`, JSON.stringify(nextProfileData));
+
+      const currentUserRaw = localStorage.getItem('finpay.currentUser');
+      if (currentUserRaw) {
+        try {
+          const currentUserParsed = JSON.parse(currentUserRaw);
+          const mergedUser = {
+            ...currentUserParsed,
+            first_name: updated.first_name || currentUserParsed.first_name,
+            last_name: updated.last_name ?? currentUserParsed.last_name,
+            email: updated.email || currentUserParsed.email,
+            phone_number: updated.phone_number || currentUserParsed.phone_number,
+            tier: updated.tier || currentUserParsed.tier,
+            role: updated.role || currentUserParsed.role,
+            status: updated.status || currentUserParsed.status,
+            balance: updated.balance ?? currentUserParsed.balance,
+          };
+          localStorage.setItem('finpay.currentUser', JSON.stringify(mergedUser));
+          if (onUserUpdate) {
+            onUserUpdate(mergedUser);
+          }
+        } catch (parseError) {
+          console.warn('Failed to synchronize current user after profile update', parseError);
+        }
+      }
+
+      showToast('Profile updated successfully!');
+      setActiveTab('main');
+    } catch (err) {
+      showToast(err.message || 'Failed to update profile');
+    } finally {
+      setIsSavingProfile(false);
+    }
   };
 
   const renderProfile = () => (
@@ -181,9 +254,10 @@ const AccountScreen = ({ user, onLogout, onBack, isDarkMode, onToggleDarkMode })
 
         <button 
           onClick={handleProfileUpdate}
-          className="mt-4 w-full bg-[#0f7a6e] text-white font-black py-5 rounded-[24px] shadow-lg shadow-[#0f7a6e]/20 active:scale-95 transition-all"
+          disabled={isSavingProfile}
+          className="mt-4 w-full bg-[#0f7a6e] text-white font-black py-5 rounded-[24px] shadow-lg shadow-[#0f7a6e]/20 active:scale-95 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          Save Profile Changes
+          {isSavingProfile ? 'Saving...' : 'Save Profile Changes'}
         </button>
       </div>
     </div>
@@ -294,7 +368,7 @@ const AccountScreen = ({ user, onLogout, onBack, isDarkMode, onToggleDarkMode })
               {avatar ? (
                 <img src={avatar} alt="Avatar" className="h-full w-full object-cover" />
               ) : (
-                user?.first_name?.charAt(0) || user?.firstName?.charAt(0) || 'U'
+                displayFirstName.charAt(0) || 'U'
               )}
             </div>
             <label className="absolute -bottom-2 -right-2 p-2 rounded-full bg-[#0f7a6e] text-white border-4 border-white cursor-pointer hover:scale-110 transition-transform shadow-lg">
@@ -303,7 +377,7 @@ const AccountScreen = ({ user, onLogout, onBack, isDarkMode, onToggleDarkMode })
             </label>
           </div>
           <div className="text-center">
-            <h2 className="text-2xl font-black tracking-tight">{user?.first_name || user?.firstName} {user?.last_name || user?.lastName || ''}</h2>
+            <h2 className="text-2xl font-black tracking-tight">{displayFirstName} {displayLastName}</h2>
             <p className="text-white/80 text-xs font-bold flex items-center justify-center gap-1 mt-1 uppercase tracking-widest">
               <Phone size={12} strokeWidth={3} /> {user?.phone_number || user?.phoneNumber}
             </p>

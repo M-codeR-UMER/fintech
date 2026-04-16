@@ -121,6 +121,18 @@ export const createTopUp = ({ source, accountNumber, amount }) =>
     fallbackError: 'Top up failed',
   });
 
+export const updateUserProfile = ({ firstName, lastName, email }) =>
+  requestJson({
+    path: '/profile',
+    method: 'PUT',
+    body: {
+      firstName,
+      lastName,
+      email,
+    },
+    fallbackError: 'Failed to update profile',
+  });
+
 export const resetSeedData = () =>
   requestJson({
     path: '/seed/reset',
@@ -154,6 +166,7 @@ export const api = {
   createTransaction,
   createTransfer,
   createTopUp,
+  updateUserProfile,
   resetSeedData,
   transfer: (recipientName, amount) => createTransfer({ recipientName, amount }),
 };
