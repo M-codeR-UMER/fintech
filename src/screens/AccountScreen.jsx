@@ -91,8 +91,6 @@ const AccountScreen = ({ user, onUserUpdate, onLogout, onBack, isDarkMode, onTog
   const userTier = accountData.tier;
   const tierName = userTier === 'L1' ? 'Level 1 (L1)' : 'Level 2 (L2)';
   const monthlyLimitDisplay = Number(accountData.limit).toLocaleString();
-  const displayFirstName = profileData.firstName?.trim() || user?.first_name || user?.firstName || 'User';
-  const displayLastName = profileData.lastName?.trim() || user?.last_name || user?.lastName || '';
 
   const menuItems = [
     { id: 'profile', icon: Settings, label: 'Profile Settings', sub: 'Name, Email, Phone' },
@@ -118,6 +116,9 @@ const AccountScreen = ({ user, onUserUpdate, onLogout, onBack, isDarkMode, onTog
       phone: user?.phone_number || user?.phoneNumber || ''
     };
   });
+
+  const displayFirstName = profileData.firstName?.trim() || user?.first_name || user?.firstName || 'User';
+  const displayLastName = profileData.lastName?.trim() || user?.last_name || user?.lastName || '';
 
   const handleProfileUpdate = async () => {
     const firstName = profileData.firstName.trim();
