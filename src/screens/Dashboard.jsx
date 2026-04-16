@@ -250,7 +250,7 @@ export default function Dashboard({ onViewAll, userFirstName, userPhoneNumber, o
 
   return (
     <div className="min-h-[82vh] flex justify-center">
-      <div className="w-full max-w-md bg-white/90 dark:bg-slate-900/90 border border-white dark:border-slate-800 rounded-[32px] shadow-2xl overflow-hidden relative h-[calc(100dvh-7.5rem)] min-h-[645px] sm:h-[765px] backdrop-blur flex flex-col">
+      <div className="w-full max-w-md bg-white/90 dark:bg-slate-900/90 border border-white dark:border-slate-800 rounded-[32px] shadow-2xl overflow-hidden relative h-[calc(100dvh-7.5rem)] min-h-[645px] sm:h-[765px] backdrop-blur flex flex-col min-h-0">
         
         <div className="h-8 w-full bg-white dark:bg-slate-900 flex justify-center items-center flex-shrink-0">
           <div className="w-1/3 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
@@ -265,7 +265,7 @@ export default function Dashboard({ onViewAll, userFirstName, userPhoneNumber, o
           isResetting={isResetting}
         />
         
-        <div className="px-6 pb-6 mt-5 h-full overflow-y-auto overflow-x-hidden flex-1">
+        <div className="px-6 pb-6 mt-5 h-full overflow-y-auto overflow-x-hidden flex-1 min-h-0">
 
           {isLoading ? (
             <div className="mb-8 rounded-3xl border border-brand-100 dark:border-brand-900 bg-brand-50/60 dark:bg-brand-950/60 p-4 text-sm text-brand-700 dark:text-brand-400">Loading wallet summary...</div>

@@ -46,7 +46,7 @@ export default function ReceiveQRScreen({ userPhone, userName, onBack }) {
 
   return (
     <div className="min-h-[82vh] flex justify-center">
-      <div className="w-full max-w-md bg-white/90 dark:bg-slate-900/90 border border-white dark:border-slate-800 rounded-[32px] shadow-2xl overflow-hidden relative h-[calc(100dvh-7.5rem)] min-h-[640px] sm:h-[760px] backdrop-blur flex flex-col">
+      <div className="w-full max-w-md bg-white/90 dark:bg-slate-900/90 border border-white dark:border-slate-800 rounded-[32px] shadow-2xl overflow-hidden relative h-[calc(100dvh-7.5rem)] min-h-[640px] sm:h-[760px] backdrop-blur flex flex-col min-h-0">
         
         {/* Phone notch */}
         <div className="h-8 w-full bg-white dark:bg-slate-900 flex justify-center items-center flex-shrink-0">
@@ -66,7 +66,7 @@ export default function ReceiveQRScreen({ userPhone, userName, onBack }) {
         </div>
 
         {/* Content - Flex column with space between */}
-        <div className="px-6 py-6 h-full overflow-y-auto overflow-x-hidden flex-1 flex flex-col justify-between">
+        <div className="px-6 py-6 h-full overflow-y-auto overflow-x-hidden flex-1 min-h-0 flex flex-col justify-between">
           
           {/* Top Section - Title and QR */}
           <div className="flex flex-col items-center gap-6">

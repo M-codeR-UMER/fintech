@@ -1,5 +1,13 @@
-// PRODUCTION API URL - HARDCODED FOR SUBMISSION
-export const API_BASE_URL = 'https://fintech-api-y5hn.onrender.com/api';
+const DEFAULT_API_BASE_URL = 'https://fintech-api-y5hn.onrender.com/api';
+const ENV_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+const normalizeApiBaseUrl = (rawUrl) => {
+  const trimmed = String(rawUrl || '').trim();
+  if (!trimmed) return DEFAULT_API_BASE_URL;
+  return trimmed.replace(/\/+$/, '');
+};
+
+export const API_BASE_URL = normalizeApiBaseUrl(ENV_API_BASE_URL);
 const API_TOKEN = import.meta.env.VITE_API_TOKEN;
 
 const buildUrl = (path, query = {}) => {

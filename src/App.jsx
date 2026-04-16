@@ -123,11 +123,11 @@ export default function App() {
     if (currentUser?.role === 'admin') {
       return (
         <div className="min-h-[82vh] flex justify-center">
-          <div className="w-full max-w-md bg-white/90 dark:bg-slate-900/90 border border-white dark:border-slate-800 rounded-[32px] shadow-2xl overflow-hidden relative h-[calc(100dvh-7.5rem)] min-h-[645px] sm:h-[765px] backdrop-blur flex flex-col">
+          <div className="w-full max-w-md bg-white/90 dark:bg-slate-900/90 border border-white dark:border-slate-800 rounded-[32px] shadow-2xl overflow-hidden relative h-[calc(100dvh-7.5rem)] min-h-[645px] sm:h-[765px] backdrop-blur flex flex-col min-h-0">
             <div className="h-8 w-full bg-white dark:bg-slate-900 flex justify-center items-center flex-shrink-0">
               <div className="w-1/3 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
             </div>
-            <div className="px-6 pb-6 h-full overflow-y-auto overflow-x-hidden flex-1">
+            <div className="px-6 pb-6 h-full overflow-y-auto overflow-x-hidden flex-1 min-h-0">
               <AdminDashboard onLogout={handleLogout} />
             </div>
           </div>
@@ -211,11 +211,11 @@ export default function App() {
         </div>
         <main className="relative mx-auto max-w-6xl animate-rise">
            <div className="min-h-[82vh] flex justify-center">
-            <div className="w-full max-w-md bg-white/90 dark:bg-slate-900/90 border border-white dark:border-slate-800 rounded-[32px] shadow-2xl overflow-hidden relative h-[calc(100dvh-7.5rem)] min-h-[645px] sm:h-[765px] backdrop-blur flex flex-col">
+            <div className="w-full max-w-md bg-white/90 dark:bg-slate-900/90 border border-white dark:border-slate-800 rounded-[32px] shadow-2xl overflow-hidden relative h-[calc(100dvh-7.5rem)] min-h-[645px] sm:h-[765px] backdrop-blur flex flex-col min-h-0">
               <div className="h-8 w-full bg-white dark:bg-slate-900 flex justify-center items-center flex-shrink-0">
                 <div className="w-1/3 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
               </div>
-              <div className="px-6 pb-6 h-full overflow-hidden flex-1 pt-4">
+              <div className="px-6 pb-6 h-full overflow-y-auto overflow-x-hidden flex-1 min-h-0 pt-4">
                  <Auth onAuthSuccess={setCurrentUser} />
               </div>
             </div>

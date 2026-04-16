@@ -70,6 +70,45 @@ npx expo start
 
 ---
 
+## ☁️ Deployment (Vercel + Render)
+
+### 1. Deploy Backend on Render
+- Create a new Web Service from this repo.
+- Set **Root Directory** to `backend`.
+- Build Command:
+```bash
+pip install -r requirements.txt
+```
+- Start Command:
+```bash
+gunicorn -w 2 -k uvicorn.workers.UvicornWorker main:app
+```
+- Add environment variables in Render:
+	- `APP_ENV=production`
+	- `SECRET_KEY=your-strong-secret`
+	- `API_TOKEN=your-api-token` (optional; only if you enforce API token checks)
+
+### 2. Deploy Web Frontend on Vercel
+- Import this same repo in Vercel.
+- Keep **Root Directory** as project root.
+- Framework Preset: `Vite`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- Add environment variables in Vercel:
+	- `VITE_API_BASE_URL=https://your-render-service.onrender.com/api`
+	- `VITE_API_TOKEN=your-api-token` (optional; only if backend token is enabled)
+
+### 3. Redeploy After Changes
+```bash
+git add .
+git commit -m "Configure API URL via environment vars"
+git push origin master
+```
+
+Pushing to `master` triggers fresh deployments on both platforms if connected to Git.
+
+---
+
 ## 📝 Assignment Information
 
 - **Full Name:** Muhammad Alber

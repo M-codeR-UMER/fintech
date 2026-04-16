@@ -81,7 +81,7 @@ export default function TransactionHistoryScreen({ onBack }) {
 
   return (
     <div className="min-h-[82vh] flex justify-center font-sans">
-      <div className="w-full max-w-md bg-white/90 dark:bg-slate-900/90 border border-white dark:border-slate-800 rounded-[32px] shadow-2xl overflow-hidden flex flex-col relative h-[calc(100dvh-7.5rem)] min-h-[640px] sm:h-[760px] backdrop-blur">
+      <div className="w-full max-w-md bg-white/90 dark:bg-slate-900/90 border border-white dark:border-slate-800 rounded-[32px] shadow-2xl overflow-hidden flex flex-col relative h-[calc(100dvh-7.5rem)] min-h-[640px] sm:h-[760px] backdrop-blur min-h-0">
         
         {/* Header */}
         <div className="bg-white dark:bg-slate-900 px-6 pt-8 pb-4 sticky top-0 z-10">
@@ -126,7 +126,7 @@ export default function TransactionHistoryScreen({ onBack }) {
         </div>
 
         {/* Transaction List */}
-        <div className="flex-1 overflow-y-auto px-2 pb-6">
+        <div className="flex-1 overflow-y-auto px-2 pb-6 min-h-0">
           {isLoading ? (
             <div className="px-4 py-6 text-sm text-brand-700 dark:text-brand-400">Loading transactions...</div>
           ) : error ? (
