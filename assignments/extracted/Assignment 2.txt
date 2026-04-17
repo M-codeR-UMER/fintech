@@ -1,9 +1,0 @@
-Assignment 2
-Topic: Digital Banking Architecture
-Q1: The conceptual architecture of digital banking consists of a Presentation Layer, a Middleware Layer, and a Backend Layer. Briefly explain the role of each layer.
-
-Q2: The Front End (Presentation Layer) is subdivided into Presentation Logic, Business Logic, and Data Logic. What is the purpose of these three distinct logic layers?
-
-Q3: Within the Middleware Layer, how do the Security Layer (Authentication, Firewall, Mobile Security) and Integration Layer (Messaging, Processing Requests) operate? 
-
-Q4: Why is it necessary for banks to spend approximately 10% of their budget specifically on Cyber Security?

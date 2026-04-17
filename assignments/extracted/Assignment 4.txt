@@ -1,9 +1,0 @@
-Assignment 4
-
-Q1: Which programming language will you select for your mobile front-end, and why does it suit your app?
-
-Q2: How will your application's Backend Layer utilize Internal and External APIs to connect seamlessly with banking core systems, such as Customer profiles, Transactions, and Payments?
-
-Q3: To protect sensitive financial data, how will you structure your Middleware Security Layer (including authentication, firewalls, and mobile security)?
-
-Q4: How do you plan to expand your app's ecosystem by incorporating Smart Watch banking features like contactless payments, push messages, account balances, and card controls?
